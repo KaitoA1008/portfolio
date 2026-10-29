@@ -1,0 +1,173 @@
+{
+  "note": "Original vector shapes and colors from Devicon, Lobe Icons, and Simple Icons. No text placeholders. Revisions pinned for reproducibility.",
+  "icons": [
+    {
+      "slug": "python",
+      "name": "Python",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/python/python-original.svg"
+    },
+    {
+      "slug": "langgraph",
+      "name": "LangGraph",
+      "source": "lobehub/lobe-icons",
+      "revision": "8a1b2821bb768c484fe8da20c5e1838b6bf551a9",
+      "url": "https://raw.githubusercontent.com/lobehub/lobe-icons/8a1b2821bb768c484fe8da20c5e1838b6bf551a9/packages/static-svg/icons/langgraph-color.svg"
+    },
+    {
+      "slug": "langchain",
+      "name": "LangChain",
+      "source": "lobehub/lobe-icons",
+      "revision": "8a1b2821bb768c484fe8da20c5e1838b6bf551a9",
+      "url": "https://raw.githubusercontent.com/lobehub/lobe-icons/8a1b2821bb768c484fe8da20c5e1838b6bf551a9/packages/static-svg/icons/langchain-color.svg"
+    },
+    {
+      "slug": "pytorch",
+      "name": "PyTorch",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/pytorch/pytorch-original.svg"
+    },
+    {
+      "slug": "openai",
+      "name": "OpenAI",
+      "source": "lobehub/lobe-icons",
+      "revision": "8a1b2821bb768c484fe8da20c5e1838b6bf551a9",
+      "url": "https://raw.githubusercontent.com/lobehub/lobe-icons/8a1b2821bb768c484fe8da20c5e1838b6bf551a9/packages/static-svg/icons/openai.svg"
+    },
+    {
+      "slug": "googlegemini",
+      "name": "Gemini",
+      "source": "lobehub/lobe-icons",
+      "revision": "8a1b2821bb768c484fe8da20c5e1838b6bf551a9",
+      "url": "https://raw.githubusercontent.com/lobehub/lobe-icons/8a1b2821bb768c484fe8da20c5e1838b6bf551a9/packages/static-svg/icons/gemini-color.svg"
+    },
+    {
+      "slug": "fastapi",
+      "name": "FastAPI",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/fastapi/fastapi-original.svg"
+    },
+    {
+      "slug": "react",
+      "name": "React",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/react/react-original.svg"
+    },
+    {
+      "slug": "scikitlearn",
+      "name": "scikit-learn",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/scikitlearn/scikitlearn-original.svg"
+    },
+    {
+      "slug": "openjdk",
+      "name": "Java",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/java/java-original.svg"
+    },
+    {
+      "slug": "springboot",
+      "name": "Spring Boot",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/spring/spring-original.svg"
+    },
+    {
+      "slug": "postgresql",
+      "name": "PostgreSQL",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/postgresql/postgresql-original.svg"
+    },
+    {
+      "slug": "redis",
+      "name": "Redis",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/redis/redis-original.svg"
+    },
+    {
+      "slug": "typescript",
+      "name": "TypeScript",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/typescript/typescript-original.svg"
+    },
+    {
+      "slug": "nextdotjs",
+      "name": "Next.js",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/nextjs/nextjs-original.svg"
+    },
+    {
+      "slug": "expo",
+      "name": "Expo",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/expo/expo-original.svg"
+    },
+    {
+      "slug": "vite",
+      "name": "Vite",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/vitejs/vitejs-original.svg"
+    },
+    {
+      "slug": "graphql",
+      "name": "GraphQL",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/graphql/graphql-plain.svg"
+    },
+    {
+      "slug": "docker",
+      "name": "Docker",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/docker/docker-original.svg"
+    },
+    {
+      "slug": "git",
+      "name": "Git",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/git/git-original.svg"
+    },
+    {
+      "slug": "githubactions",
+      "name": "GitHub Actions",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/githubactions/githubactions-original.svg"
+    },
+    {
+      "slug": "pytest",
+      "name": "pytest",
+      "source": "devicons/devicon",
+      "revision": "6a37858047b0e8d9c9c0e68f4a071fc410652e89",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/6a37858047b0e8d9c9c0e68f4a071fc410652e89/icons/pytest/pytest-original.svg"
+    },
+    {
+      "slug": "langfuse",
+      "name": "Langfuse",
+      "source": "lobehub/lobe-icons",
+      "revision": "8a1b2821bb768c484fe8da20c5e1838b6bf551a9",
+      "url": "https://raw.githubusercontent.com/lobehub/lobe-icons/8a1b2821bb768c484fe8da20c5e1838b6bf551a9/packages/static-svg/icons/langfuse-color.svg"
+    },
+    {
+      "slug": "vercel",
+      "name": "Vercel",
+      "source": "simple-icons/simple-icons",
+      "revision": "c71c69e3a27e4436936b831c72643e6513b9f49b",
+      "url": "https://raw.githubusercontent.com/simple-icons/simple-icons/c71c69e3a27e4436936b831c72643e6513b9f49b/icons/vercel.svg"
+    }
+  ]
+}

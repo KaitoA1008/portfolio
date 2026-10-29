@@ -1,0 +1,290 @@
+<!doctype html><html lang="en" data-theme="ocean"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#070b12"><title>Quang Anh — Portfolio</title><meta name="description" content="Nguyễn Quang Anh, AI engineer in Hanoi: retrieval pipelines, agent workflows and the backend systems behind them."><meta property="og:title" content="Quang Anh — Portfolio"><meta property="og:description" content="Nguyễn Quang Anh, AI engineer in Hanoi: retrieval pipelines, agent workflows and the backend systems behind them."><meta property="og:type" content="website"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css"><script>document.documentElement.classList.add("js")</script><script src="app.js" defer></script></head><body><a class="skip-link" href="#main">Skip to content</a><div class="loader" id="loader" aria-hidden="true"><div class="loader-inner">
+<p class="loader-logo">quang-anh · portfolio</p>
+<div class="loader-ring" data-ring><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+<p class="loader-count"><span data-count>000</span><sup>%</sup></p>
+<p class="loader-note" data-note>Preparing the workspace</p></div>
+<div class="loader-track"><span data-bar></span></div></div>
+<script>// Loading screen. Inlined by build.cjs right after the loader markup, so it runs before the page paints.
+// The counter follows real progress (document, images, window load), stays at least MIN_MS so the
+// animation reads, never blocks longer than MAX_MS, and only shows once per browser session.
+(function () {
+  var root = document.documentElement;
+  var loader = document.getElementById("loader");
+  if (!loader) return;
+  var seen = false;
+  try {
+    seen = sessionStorage.getItem("qa-loader-seen") === "1";
+  } catch (e) {}
+  if (seen) {
+    loader.remove();
+    return;
+  }
+  root.classList.add("is-loading");
+
+  var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var MIN_MS = reduced ? 400 : 1400;
+  var MAX_MS = 8000;
+  var start = performance.now();
+  var count = loader.querySelector("[data-count]");
+  var bar = loader.querySelector("[data-bar]");
+  var note = loader.querySelector("[data-note]");
+  var notes = ["Preparing the workspace", "Collecting projects", "Drawing the orbit", "Lighting the stage", "Almost there"];
+  var target = 8;
+  var shown = 0;
+  var finished = false;
+
+  var noteIndex = 0;
+  var noteTimer = setInterval(function () {
+    noteIndex = (noteIndex + 1) % notes.length;
+    note.textContent = notes[noteIndex];
+  }, 650);
+
+  // Progress: 0–30 while the document parses, 30–90 as above-the-fold images arrive, 100 on load.
+  document.addEventListener("DOMContentLoaded", function () {
+    target = Math.max(target, 30);
+    var images = Array.prototype.filter.call(document.images, function (img) {
+      return img.loading !== "lazy";
+    });
+    var done = 0;
+    var tick = function () {
+      done++;
+      target = Math.max(target, 30 + (60 * done) / Math.max(images.length, 1));
+    };
+    if (!images.length) target = 90;
+    images.forEach(function (img) {
+      if (img.complete) tick();
+      else {
+        img.addEventListener("load", tick, { once: true });
+        img.addEventListener("error", tick, { once: true });
+      }
+    });
+  });
+  addEventListener("load", function () {
+    target = 100;
+  });
+
+  function finish() {
+    if (finished) return;
+    finished = true;
+    clearInterval(noteTimer);
+    count.textContent = "100";
+    bar.style.transform = "scaleX(1)";
+    loader.classList.add("done");
+    root.classList.remove("is-loading");
+    try {
+      sessionStorage.setItem("qa-loader-seen", "1");
+    } catch (e) {}
+    dispatchEvent(new Event("loader-done"));
+    setTimeout(function () {
+      loader.remove();
+    }, reduced ? 300 : 1100);
+  }
+
+  // Ring of discs turning round a vertical axis, seen slightly from above. Each disc faces outwards,
+  // so it narrows at the sides; discs at the back are smaller, higher, dimmer and blurred.
+  var discs = Array.prototype.slice.call(loader.querySelectorAll("[data-ring] span"));
+  var RX = 150; // ring radius on screen, px
+  var TILT = 0.32; // how far the back rises (vertical squash of the orbit)
+  var FOCAL = 520;
+  // Disc colours run round the theme gradient (--a1 -> --a2 -> --a1), shifted by the turn.
+  var css = getComputedStyle(root);
+  var hex = function (name) {
+    var h = css.getPropertyValue(name).trim().replace("#", "");
+    return [0, 2, 4].map(function (k) { return parseInt(h.slice(k, k + 2), 16); });
+  };
+  var A1 = hex("--a1");
+  var A2 = hex("--a2");
+  var mix = function (t) {
+    var w = (1 - Math.cos(t * Math.PI * 2)) / 2; // 0 at a1, 1 at a2, back to a1
+    return A1.map(function (c, k) { return Math.round(c + (A2[k] - c) * w); });
+  };
+  var rgb = function (c, a) { return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")"; };
+  function ring(now) {
+    var turn = reduced ? 0.35 : now * 0.0009;
+    for (var i = 0; i < discs.length; i++) {
+      var a = turn + (i / discs.length) * Math.PI * 2;
+      var x = Math.sin(a) * RX;
+      var z = Math.cos(a) * RX; // +RX = front
+      var depth = (z / RX + 1) / 2; // 0 back .. 1 front
+      var p = FOCAL / (FOCAL - z * 0.9);
+      var y = z * TILT;
+      var face = Math.max(0.12, Math.abs(Math.cos(a)));
+      var d = discs[i];
+      d.style.transform =
+        "translate3d(" + (x * p).toFixed(1) + "px," + (y * p).toFixed(1) + "px,0) scale(" + (face * p).toFixed(3) + "," + p.toFixed(3) + ")";
+      d.style.opacity = (0.12 + 0.88 * Math.pow(depth, 1.6)).toFixed(3);
+      d.style.filter = "blur(" + ((1 - depth) * 7).toFixed(1) + "px)";
+      d.style.zIndex = String(Math.round(depth * 100));
+      var t = (i / discs.length + turn / (Math.PI * 2) * 0.6) % 1;
+      var c1 = mix(t);
+      var c2 = mix(t + 0.33);
+      d.style.background = "linear-gradient(135deg, " + rgb(c1, 1) + ", " + rgb(c2, 1) + ")";
+      d.style.boxShadow = "0 0 " + Math.round(10 + depth * 22) + "px " + rgb(c1, 0.35 * depth);
+    }
+  }
+
+  function frame(now) {
+    if (finished) return;
+    ring(now);
+    var elapsed = now - start;
+    // The shown number eases towards the real target, and cannot outrun the minimum duration.
+    var cap = Math.min(100, (elapsed / MIN_MS) * 100);
+    shown += (Math.min(target, cap) - shown) * 0.12;
+    if (target >= 100 && cap >= 100 && shown > 99.4) shown = 100;
+    var value = Math.round(shown);
+    count.textContent = (value < 10 ? "00" : value < 100 ? "0" : "") + value;
+    bar.style.transform = "scaleX(" + shown / 100 + ")";
+    if (value >= 100 || elapsed > MAX_MS) finish();
+    else requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script><main id="main"><section class="hero" id="home" aria-labelledby="hero-name">
+<canvas class="rain" aria-hidden="true"></canvas>
+<p class="hero-logo">quang-anh · portfolio</p>
+<h1 class="hero-name" id="hero-name"><span>QUANG</span><span class="hero-last">ANH<img decoding="async" src="assets/quang-anh-cutout.webp" alt="" width="675" height="900" fetchpriority="high"></span></h1>
+<p class="hero-tagline">Practical AI, with a human in the loop.</p>
+</section><div class="flow"><div class="flow-bg" aria-hidden="true"><canvas class="flow-veil"></canvas></div><section class="about" id="about" aria-labelledby="about-title">
+<div class="about-copy reveal"><h2 id="about-title">Hi, I'm <span class="accent">Quang Anh</span><br>An AI Engineer</h2>
+<p>AI engineer based in Hanoi. I build retrieval pipelines, agent workflows and the backend systems that make them usable — and I measure them honestly.</p></div>
+<figure class="portrait-card reveal"><img decoding="async" src="assets/quang-anh-cutout.webp" alt="Nguyễn Quang Anh" width="675" height="900" loading="lazy"></figure>
+</section><section class="journey" id="journey" aria-labelledby="journey-title">
+<h2 class="visually-hidden" id="journey-title">My journey</h2>
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>MY JOURNEY</span><i></i><span>MY JOURNEY</span><i></i><span>MY JOURNEY</span><i></i><span>MY JOURNEY</span><i></i><span>MY JOURNEY</span><i></i><span>MY JOURNEY</span><i></i></div></div>
+<ol class="timeline"><li class="timeline-item reveal"><span class="timeline-dot" aria-hidden="true"></span>
+<p class="timeline-date">Sep 2026 — Present</p>
+<div class="timeline-body"><h3>Lab Coach <span>at VinUniversity</span></h3><p>Run hands-on labs on deploying and operating AI systems.</p>
+<p class="timeline-group">Experience</p><ul><li>Docker, API serving, CI/CD and monitoring</li><li>Review trainees’ LLM/RAG pipelines and agents</li></ul>
+<ul class="timeline-tech" aria-label="Technologies"><li>Docker</li><li>CI/CD</li><li>Vector DBs</li></ul>
+</div></li><li class="timeline-item reveal"><span class="timeline-dot" aria-hidden="true"></span>
+<p class="timeline-date">May — Aug 2026</p>
+<div class="timeline-body"><h3>Applied AI Trainee <span>at Vingroup × VinUni</span></h3><p>Completed the Applied AI Talent Program and built VinGrade.</p>
+<p class="timeline-group">Training</p><ul><li>Evidence-based essay grading with LangGraph</li><li>Cost and failure tracing with LangSmith and Langfuse</li></ul>
+<ul class="timeline-tech" aria-label="Technologies"><li>LangGraph</li><li>FastAPI</li><li>pgvector</li><li>React</li></ul>
+</div></li><li class="timeline-item reveal"><span class="timeline-dot" aria-hidden="true"></span>
+<p class="timeline-date">Jan — Apr 2026</p>
+<div class="timeline-body"><h3>AI Engineer Intern <span>at FPT Software</span></h3><p>Retrieval and evaluation for an internal document-QA RAG system.</p>
+<p class="timeline-group">Experience</p><ul><li>6-stage retrieval pipeline with hybrid search and reranking</li><li>4-axis evaluation gating every change</li></ul>
+<ul class="timeline-tech" aria-label="Technologies"><li>Python</li><li>FastAPI</li><li>pgvector</li><li>pytest</li></ul>
+</div></li><li class="timeline-item reveal"><span class="timeline-dot" aria-hidden="true"></span>
+<p class="timeline-date">2022 — Dec 2026</p>
+<div class="timeline-body"><h3>Information Technology <span>at PTIT</span></h3><p>Engineer’s degree, expected December 2026.</p>
+<p class="timeline-group">Education</p><ul><li>Thesis: Englow3, IELTS and TOEIC prep platform</li><li>DeepLearning.AI ML and Deep Learning certificates</li></ul>
+
+</div></li></ol>
+</section><section class="philosophy" id="philosophy" aria-labelledby="philosophy-title">
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>MY PHILOSOPHY</span><i></i><span>MY PHILOSOPHY</span><i></i><span>MY PHILOSOPHY</span><i></i><span>MY PHILOSOPHY</span><i></i><span>MY PHILOSOPHY</span><i></i><span>MY PHILOSOPHY</span><i></i></div></div>
+<div class="philosophy-stage">
+<div class="ring-text" aria-hidden="true"><svg viewBox="0 0 200 200"><defs><path id="ring" d="M100 100m-74 0a74 74 0 1 1 148 0a74 74 0 1 1-148 0"/></defs><text><textPath href="#ring" textLength="452" lengthAdjust="spacing">MY PHILOSOPHY • MY PHILOSOPHY •</textPath></text></svg></div>
+<h2 class="visually-hidden" id="philosophy-title">My philosophy: Curious, Practical, Grounded</h2>
+<div class="morph" aria-hidden="true" data-words="Curious|Practical|Grounded"><span></span><span></span></div>
+<svg class="goo-filter" aria-hidden="true"><defs><filter id="threshold"><feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 255 -140"/></filter></defs></svg>
+<p class="philosophy-line">Stay curious, build practically, and keep people in control.</p></div>
+</section><section class="stack" id="stack" aria-labelledby="stack-title">
+<h2 class="visually-hidden" id="stack-title">My tech stack</h2>
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>MY TECH STACK</span><i></i><span>MY TECH STACK</span><i></i><span>MY TECH STACK</span><i></i><span>MY TECH STACK</span><i></i><span>MY TECH STACK</span><i></i><span>MY TECH STACK</span><i></i></div></div>
+<div class="orbit-wrap reveal"><div class="orbit spinning"><div class="orbit-square">
+<div class="orbit-ring" aria-hidden="true"></div><div class="orbit-glow" aria-hidden="true"></div>
+<div class="orbit-track" role="group" aria-label="Technology groups"><button class="orbit-node" type="button" id="tab-ai" aria-controls="panel-ai" aria-expanded="false" style="--n:0"><span class="node-inner"><span class="node-icon"><svg class="icon" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h1V4zM15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3h-1V4z"/></svg></span><span class="node-label">AI &amp; LLM</span></span></button><button class="orbit-node" type="button" id="tab-backend" aria-controls="panel-backend" aria-expanded="false" style="--n:1"><span class="node-inner"><span class="node-icon"><svg class="icon" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span><span class="node-label">Backend</span></span></button><button class="orbit-node" type="button" id="tab-data" aria-controls="panel-data" aria-expanded="false" style="--n:2"><span class="node-inner"><span class="node-icon"><svg class="icon" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span><span class="node-label">Data</span></span></button><button class="orbit-node" type="button" id="tab-frontend" aria-controls="panel-frontend" aria-expanded="false" style="--n:3"><span class="node-inner"><span class="node-icon"><svg class="icon" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span><span class="node-label">Frontend &amp; mobile</span></span></button><button class="orbit-node" type="button" id="tab-devops" aria-controls="panel-devops" aria-expanded="false" style="--n:4"><span class="node-inner"><span class="node-icon"><svg class="icon" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a5 5 0 0 1-.9-9.9A6 6 0 0 1 17.6 9 4.5 4.5 0 0 1 17 18z"/></svg></span><span class="node-label">DevOps &amp; testing</span></span></button></div>
+</div>
+<div class="stack-card" role="region" id="panel-ai" aria-labelledby="tab-ai" hidden>
+<div class="card-top"><span class="badge">8 tools</span><span class="card-kind">AI &amp; LLM</span></div>
+<h3>AI &amp; LLM</h3><p>LLM applications, retrieval and agent workflows, measured with evaluation sets.</p>
+<div class="card-meter"><div class="meter-head"><span><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Project coverage</span><strong>3/4</strong></div><div class="meter"><span style="width:75%"></span></div></div>
+<p class="card-sub"><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg> Tech stack</p><ul class="chips"><li><img decoding="async" src="assets/skills/python.svg" alt="" width="18" height="18" loading="lazy">Python</li><li><img decoding="async" src="assets/skills/langgraph.svg" alt="" width="18" height="18" loading="lazy">LangGraph</li><li><img decoding="async" src="assets/skills/langchain.svg" alt="" width="18" height="18" loading="lazy">LangChain</li><li><img decoding="async" src="assets/skills/pytorch.svg" alt="" width="18" height="18" loading="lazy">PyTorch</li><li><img decoding="async" src="assets/skills/openai.svg" alt="" width="18" height="18" loading="lazy">OpenAI</li><li><img decoding="async" src="assets/skills/googlegemini.svg" alt="" width="18" height="18" loading="lazy">Gemini</li><li><img decoding="async" src="assets/skills/scikitlearn.svg" alt="" width="18" height="18" loading="lazy">scikit-learn</li><li><img decoding="async" src="assets/skills/langfuse.svg" alt="" width="18" height="18" loading="lazy">Langfuse</li></ul>
+<p class="card-sub"><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Used in</p><div class="card-links"><a href="projects/vingrade.html" data-project="vingrade">VinGrade <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="projects/ledgerlens.html" data-project="ledgerlens">LedgerLens <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="projects/relaydesk.html" data-project="relaydesk">RelayDesk <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div><div class="stack-card" role="region" id="panel-backend" aria-labelledby="tab-backend" hidden>
+<div class="card-top"><span class="badge">4 tools</span><span class="card-kind">Backend</span></div>
+<h3>Backend</h3><p>APIs and services that make AI features dependable: validation, jobs and permissions.</p>
+<div class="card-meter"><div class="meter-head"><span><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Project coverage</span><strong>4/4</strong></div><div class="meter"><span style="width:100%"></span></div></div>
+<p class="card-sub"><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg> Tech stack</p><ul class="chips"><li><img decoding="async" src="assets/skills/fastapi.svg" alt="" width="18" height="18" loading="lazy">FastAPI</li><li><img decoding="async" src="assets/skills/openjdk.svg" alt="" width="18" height="18" loading="lazy">Java</li><li><img decoding="async" src="assets/skills/springboot.svg" alt="" width="18" height="18" loading="lazy">Spring Boot</li><li><img decoding="async" src="assets/skills/graphql.svg" alt="" width="18" height="18" loading="lazy">GraphQL</li></ul>
+<p class="card-sub"><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Used in</p><div class="card-links"><a href="projects/vingrade.html" data-project="vingrade">VinGrade <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="projects/englow3.html" data-project="englow3">Englow3 <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="projects/ledgerlens.html" data-project="ledgerlens">LedgerLens <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="projects/relaydesk.html" data-project="relaydesk">RelayDesk <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div><div class="stack-card" role="region" id="panel-data" aria-labelledby="tab-data" hidden>
+<div class="card-top"><span class="badge">2 tools</span><span class="card-kind">Data</span></div>
+<h3>Data</h3><p>Relational data, vector search and caching behind the applications.</p>
+<div class="card-meter"><div class="meter-head"><span><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Project coverage</span><strong>4/4</strong></div><div class="meter"><span style="width:100%"></span></div></div>
+<p class="card-sub"><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg> Tech stack</p><ul class="chips"><li><img decoding="async" src="assets/skills/postgresql.svg" alt="" width="18" height="18" loading="lazy">PostgreSQL</li><li><img decoding="async" src="assets/skills/redis.svg" alt="" width="18" height="18" loading="lazy">Redis</li></ul>
+<p class="card-sub"><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Used in</p><div class="card-links"><a href="projects/vingrade.html" data-project="vingrade">VinGrade <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="projects/englow3.html" data-project="englow3">Englow3 <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="projects/ledgerlens.html" data-project="ledgerlens">LedgerLens <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="projects/relaydesk.html" data-project="relaydesk">RelayDesk <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div><div class="stack-card" role="region" id="panel-frontend" aria-labelledby="tab-frontend" hidden>
+<div class="card-top"><span class="badge">5 tools</span><span class="card-kind">Frontend &amp; mobile</span></div>
+<h3>Frontend &amp; mobile</h3><p>Interfaces for reviewing, approving and using what the models produce.</p>
+<div class="card-meter"><div class="meter-head"><span><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Project coverage</span><strong>4/4</strong></div><div class="meter"><span style="width:100%"></span></div></div>
+<p class="card-sub"><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg> Tech stack</p><ul class="chips"><li><img decoding="async" src="assets/skills/react.svg" alt="" width="18" height="18" loading="lazy">React</li><li><img decoding="async" src="assets/skills/typescript.svg" alt="" width="18" height="18" loading="lazy">TypeScript</li><li><img decoding="async" src="assets/skills/nextdotjs.svg" alt="" width="18" height="18" loading="lazy">Next.js</li><li><img decoding="async" src="assets/skills/expo.svg" alt="" width="18" height="18" loading="lazy">Expo</li><li><img decoding="async" src="assets/skills/vite.svg" alt="" width="18" height="18" loading="lazy">Vite</li></ul>
+<p class="card-sub"><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Used in</p><div class="card-links"><a href="projects/vingrade.html" data-project="vingrade">VinGrade <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="projects/englow3.html" data-project="englow3">Englow3 <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="projects/ledgerlens.html" data-project="ledgerlens">LedgerLens <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="projects/relaydesk.html" data-project="relaydesk">RelayDesk <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div><div class="stack-card" role="region" id="panel-devops" aria-labelledby="tab-devops" hidden>
+<div class="card-top"><span class="badge">5 tools</span><span class="card-kind">DevOps &amp; testing</span></div>
+<h3>DevOps &amp; testing</h3><p>Containers, CI and automated tests that keep releases repeatable.</p>
+<div class="card-meter"><div class="meter-head"><span><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Project coverage</span><strong>2/4</strong></div><div class="meter"><span style="width:50%"></span></div></div>
+<p class="card-sub"><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg> Tech stack</p><ul class="chips"><li><img decoding="async" src="assets/skills/docker.svg" alt="" width="18" height="18" loading="lazy">Docker</li><li><img decoding="async" src="assets/skills/git.svg" alt="" width="18" height="18" loading="lazy">Git</li><li><img decoding="async" src="assets/skills/githubactions.svg" alt="" width="18" height="18" loading="lazy">GitHub Actions</li><li><img decoding="async" src="assets/skills/pytest.svg" alt="" width="18" height="18" loading="lazy">pytest</li><li><img decoding="async" src="assets/skills/vercel.svg" alt="" width="18" height="18" loading="lazy">Vercel</li></ul>
+<p class="card-sub"><svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Used in</p><div class="card-links"><a href="projects/ledgerlens.html" data-project="ledgerlens">LedgerLens <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="projects/relaydesk.html" data-project="relaydesk">RelayDesk <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div>
+</div></div>
+</section><section class="projects" id="projects" aria-labelledby="projects-title">
+<h2 class="visually-hidden" id="projects-title">My projects</h2>
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>MY PROJECTS</span><i></i><span>MY PROJECTS</span><i></i><span>MY PROJECTS</span><i></i><span>MY PROJECTS</span><i></i><span>MY PROJECTS</span><i></i><span>MY PROJECTS</span><i></i></div></div>
+<p class="section-sub reveal">AI products, retrieval systems and full-stack applications — each with a case study.</p>
+<div class="stage-wrap" data-stage><div class="stage">
+<canvas class="stage-canvas" aria-hidden="true"></canvas>
+<div class="stage-caption" aria-live="polite"><div class="cap-text"><p class="cap-kind" data-kind></p><h3 data-name></h3><p class="cap-summary" data-text></p><a class="cap-link" data-link href="#">Read case study <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+<div class="cap-nav"><button type="button" data-prev aria-label="Previous project"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button><button type="button" data-next aria-label="Next project"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button></div></div>
+</div></div>
+<script type="application/json" id="stage-data">[{"slug":"vingrade","name":"VinGrade","type":"AI · EDUCATION","summary":"An AI essay grading assistant that keeps teachers in control.","href":"projects/vingrade.html","image":"assets/vingrade-landing-en.webp"},{"slug":"englow3","name":"Englow3","type":"FULL-STACK · EDUCATION","summary":"IELTS and TOEIC preparation, connected across web and mobile.","href":"projects/englow3.html","image":"assets/englow3-interface.webp"},{"slug":"ledgerlens","name":"LedgerLens","type":"DOCUMENT AUTOMATION","summary":"A document review workspace for layout-aware invoice extraction and purchase-order matching.","href":"projects/ledgerlens.html","image":"assets/ledgerlens-current.webp"},{"slug":"relaydesk","name":"RelayDesk","type":"AGENT WORKFLOWS","summary":"A support operations desk with policy retrieval, agent tools and human approval.","href":"projects/relaydesk.html","image":"assets/relaydesk-current.webp"}]</script>
+<div class="project-grid"><article class="project-card reveal"><a href="projects/vingrade.html" data-project="vingrade" aria-label="Read the VinGrade case study">
+<div class="project-shot"><img decoding="async" src="assets/vingrade-landing-en-card.webp" alt="" width="760" height="570" loading="lazy"></div>
+<div class="project-text"><h3>VinGrade</h3><p>An AI essay grading assistant that keeps teachers in control.</p><ul class="project-stack"><li>Python</li><li>FastAPI</li><li>pgvector</li><li>React</li></ul>
+<span class="project-link">Read case study <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a></article><article class="project-card reveal"><a href="projects/englow3.html" data-project="englow3" aria-label="Read the Englow3 case study">
+<div class="project-shot"><img decoding="async" src="assets/englow3-interface-card.webp" alt="" width="760" height="570" loading="lazy"></div>
+<div class="project-text"><h3>Englow3</h3><p>IELTS and TOEIC preparation, connected across web and mobile.</p><ul class="project-stack"><li>Spring Boot</li><li>Next.js</li><li>Expo</li><li>PostgreSQL</li></ul>
+<span class="project-link">Read case study <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a></article><article class="project-card reveal"><a href="projects/ledgerlens.html" data-project="ledgerlens" aria-label="Read the LedgerLens case study">
+<div class="project-shot"><img decoding="async" src="assets/ledgerlens-current-card.webp" alt="" width="760" height="570" loading="lazy"></div>
+<div class="project-text"><h3>LedgerLens</h3><p>A document review workspace for layout-aware invoice extraction and purchase-order matching.</p><ul class="project-stack"><li>Python</li><li>FastAPI</li><li>PostgreSQL</li><li>Next.js</li></ul>
+<span class="project-link">Read case study <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a></article><article class="project-card reveal"><a href="projects/relaydesk.html" data-project="relaydesk" aria-label="Read the RelayDesk case study">
+<div class="project-shot"><img decoding="async" src="assets/relaydesk-current-card.webp" alt="" width="760" height="570" loading="lazy"></div>
+<div class="project-text"><h3>RelayDesk</h3><p>A support operations desk with policy retrieval, agent tools and human approval.</p><ul class="project-stack"><li>LangGraph</li><li>PostgreSQL</li><li>FastAPI</li><li>Next.js</li></ul>
+<span class="project-link">Read case study <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a></article></div>
+</section><section class="contact" id="contact" aria-labelledby="contact-title">
+<div class="contact-copy reveal"><span class="pill">Let's Connect</span><h2 id="contact-title">Get In Touch</h2>
+<p>Ready to collaborate or just want to chat? Let's build something useful together.</p>
+<a class="contact-email" href="mailto:quanganhptit030@gmail.com">quanganhptit030@gmail.com</a></div>
+<div class="contact-grid"><a class="contact-card reveal" href="mailto:quanganhptit030@gmail.com" ><span class="contact-icon"><svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><strong>Email</strong><span>Write to me</span><em>Connect <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></em></a><a class="contact-card reveal" href="https://www.linkedin.com/in/quanganhptit" target="_blank" rel="noopener"><span class="contact-icon"><svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h3v11H4zM5.5 4a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zM10 9h3v1.6c.6-1 1.8-1.9 3.6-1.9 3 0 3.4 2 3.4 4.6V20h-3v-5.8c0-1.4 0-3-1.9-3s-2.1 1.4-2.1 2.9V20h-3z" fill="currentColor" stroke="none"/></svg></span><strong>LinkedIn</strong><span>Professional network</span><em>Connect <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></em></a><a class="contact-card reveal" href="https://github.com/KaitoA1008" target="_blank" rel="noopener"><span class="contact-icon"><svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.7s.8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z" fill="currentColor" stroke="none"/></svg></span><strong>GitHub</strong><span>Code repository</span><em>Connect <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></em></a></div>
+</section><section class="playground" id="playground" aria-labelledby="play-title">
+<div class="play-copy reveal"><h2 id="play-title">Quang Anh <span class="accent">Playground</span></h2>
+<p>Take a break and enjoy a small game built with vanilla JavaScript.</p></div>
+<div class="game reveal"><div class="board-wrap"><canvas class="board" width="300" height="600" aria-label="Falling blocks game board" role="img"></canvas><p class="board-message" aria-live="polite">Press Start Game</p></div>
+<div class="game-side"><div class="stat"><span>Score</span><strong data-stat="score">0</strong></div><div class="stat"><span>Level</span><strong data-stat="level">1</strong></div><div class="stat"><span>Lines</span><strong data-stat="lines">0</strong></div>
+<div class="stat controls"><span>Controls</span><p>← → Move<br>↓ Soft drop<br>↑ / Space Rotate</p></div>
+<button class="start" type="button">Start Game</button></div>
+<div class="touch-pad" aria-label="Game controls"><button type="button" data-key="ArrowLeft" aria-label="Move left">←</button><button type="button" data-key="ArrowUp" aria-label="Rotate">⟳</button><button type="button" data-key="ArrowDown" aria-label="Soft drop">↓</button><button type="button" data-key="ArrowRight" aria-label="Move right">→</button></div></div>
+</section></div></main><footer class="footer"><span>© 2026 Nguyễn Quang Anh</span><a href="mailto:quanganhptit030@gmail.com">quanganhptit030@gmail.com</a></footer><nav class="dock" aria-label="Sections"><a href="#home" data-target="home" aria-label="Home"><span class="dock-icon"><svg class="icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span><span class="dock-tip">Home</span></a><a href="#about" data-target="about" aria-label="About"><span class="dock-icon"><svg class="icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span class="dock-tip">About</span></a><a href="#journey" data-target="journey" aria-label="Journey"><span class="dock-icon"><svg class="icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg></span><span class="dock-tip">Journey</span></a><a href="#philosophy" data-target="philosophy" aria-label="Philosophy"><span class="dock-icon"><svg class="icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8zM19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8zM5 15l.6 1.4L7 17l-1.4.6L5 19l-.6-1.4L3 17l1.4-.6z"/></svg></span><span class="dock-tip">Philosophy</span></a><a href="#stack" data-target="stack" aria-label="Tech stack"><span class="dock-icon"><svg class="icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg></span><span class="dock-tip">Tech stack</span></a><a href="#projects" data-target="projects" aria-label="Projects"><span class="dock-icon"><svg class="icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span class="dock-tip">Projects</span></a><a href="#contact" data-target="contact" aria-label="Contact"><span class="dock-icon"><svg class="icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><span class="dock-tip">Contact</span></a><a href="#playground" data-target="playground" aria-label="Playground"><span class="dock-icon"><svg class="icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="11" rx="4"/><path d="M7 11v3M5.5 12.5h3M15.5 12h.01M18 14h.01"/></svg></span><span class="dock-tip">Playground</span></a></nav><dialog class="project-modal" aria-label="Project case study"><div class="modal-shell"><button class="modal-close" type="button" aria-label="Close case study"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button><div class="modal-body case"></div></div></dialog>
+<template id="tpl-vingrade"><p class="case-kicker"><span>AI · EDUCATION</span><span>Private repository · 2026</span></p>
+<h2 class="case-title">VinGrade<span class="accent">.</span></h2><p class="case-tagline">Grading, with evidence.</p><p class="case-intro">Essay scores need a reason. VinGrade connects rubric-based assessment to evidence in the essay, with a review flow for teachers.</p>
+<dl class="case-meta"><div><dt>Role</dt><dd>AI &amp; backend development</dd></div><div><dt>Built with</dt><dd>Python · FastAPI · pgvector · React</dd></div></dl>
+<figure class="case-cover"><img decoding="async" src="assets/vingrade-landing-en.webp" alt="VinGrade interface" loading="lazy"></figure>
+<section class="case-section"><p class="eyebrow">The problem</p><h3 class="case-h">What needed to work.</h3><p>Make AI-assisted assessment inspectable: a teacher should be able to understand the evidence behind a score and review the result.</p></section>
+<section class="case-section"><p class="eyebrow">The workflow</p><h3 class="case-h">A deliberate path.</h3><ol class="case-steps"><li><h3>Assess</h3><p>Evaluate the essay against assignment-specific rubric criteria.</p></li><li><h3>Ground</h3><p>Attach quoted essay evidence to the assessment.</p></li><li><h3>Review</h3><p>Let a teacher inspect and review the grading output.</p></li></ol></section>
+<section class="case-section"><p class="eyebrow">My contribution</p><h3 class="case-h">Under the interface.</h3><ul class="case-list"><li>Rubric-based grading and evidence validation.</li><li>JWT-secured FastAPI endpoints for classes, assignments and rubrics.</li><li>Similarity-based duplicate flags for human review.</li><li>LLM tracing, token usage visibility and regression checks.</li></ul></section>
+
+<section class="case-section"><p class="eyebrow">Engineering decisions</p><div class="case-decisions"><div><h4>Evidence before confidence</h4><p>Scores are accompanied by essay evidence so the teacher can inspect the reasoning.</p></div><div><h4>A reviewable workflow</h4><p>AI assists the assessment; teachers remain responsible for reviewing the result.</p></div></div></section>
+<aside class="case-note"><p class="eyebrow">Project context</p><p>Built during the Vingroup × VinUni Applied AI Talent Program. The screenshot shows the English landing page from a local build. Repository access is private; no public live demo is linked.</p></aside><a class="case-next" href="projects/englow3.html" data-project="englow3"><span class="eyebrow">Next project</span><span>Englow3 <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></template><template id="tpl-englow3"><p class="case-kicker"><span>FULL-STACK · EDUCATION</span><span>Private repository · 2026 — ONGOING</span></p>
+<h2 class="case-title">Englow3<span class="accent">.</span></h2><p class="case-tagline">A clearer path to English.</p><p class="case-intro">A graduation-thesis project bringing placement, exam practice and learning flows into one English test-preparation platform.</p>
+<dl class="case-meta"><div><dt>Role</dt><dd>Backend &amp; platform development</dd></div><div><dt>Built with</dt><dd>Spring Boot · Next.js · Expo · PostgreSQL</dd></div></dl>
+<figure class="case-cover"><img decoding="async" src="assets/englow3-interface.webp" alt="Englow3 interface" loading="lazy"></figure>
+<section class="case-section"><p class="eyebrow">The problem</p><h3 class="case-h">What needed to work.</h3><p>Keep placement and exam data consistent while supporting different learning experiences on the web and on mobile.</p></section>
+<section class="case-section"><p class="eyebrow">The workflow</p><h3 class="case-h">A deliberate path.</h3><ol class="case-steps"><li><h3>Place</h3><p>Use a placement flow to establish a starting point.</p></li><li><h3>Practice</h3><p>Deliver exam and learning content through shared backend models.</p></li><li><h3>Connect</h3><p>Serve web and mobile clients through the platform API.</p></li></ol></section>
+<section class="case-section"><p class="eyebrow">My contribution</p><h3 class="case-h">Under the interface.</h3><ul class="case-list"><li>Backend development with Java 21 and Spring Boot 3.</li><li>Placement flow and a shared exam model.</li><li>PostgreSQL data management with Flyway and jOOQ.</li><li>API integration supporting Next.js web and Expo mobile clients.</li></ul></section>
+
+<section class="case-section"><p class="eyebrow">Engineering decisions</p><div class="case-decisions"><div><h4>One shared exam model</h4><p>Web and mobile consume a consistent representation of exam content.</p></div><div><h4>A platform foundation</h4><p>Schema migrations and modular backend components support ongoing feature work.</p></div></div></section>
+<aside class="case-note"><p class="eyebrow">Project context</p><p>Ongoing graduation-thesis project. The screenshot shows the project landing page from a local build. Repository access is private; no public live demo is linked.</p></aside><a class="case-next" href="projects/ledgerlens.html" data-project="ledgerlens"><span class="eyebrow">Next project</span><span>LedgerLens <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></template><template id="tpl-ledgerlens"><p class="case-kicker"><span>DOCUMENT AUTOMATION</span><span>Independent demo · 2026</span></p>
+<h2 class="case-title">LedgerLens<span class="accent">.</span></h2><p class="case-tagline">From invoice to audit trail.</p><p class="case-intro">An independent portfolio demo that makes invoice automation reviewable—from document intake to field evidence, purchase-order checks and approved exports.</p>
+<dl class="case-meta"><div><dt>Role</dt><dd>Product, full-stack &amp; workflow development</dd></div><div><dt>Built with</dt><dd>Python · FastAPI · PostgreSQL · Next.js</dd></div><div><dt>Source</dt><dd><a class="case-repo" href="https://github.com/KaitoA1008/ledgerlens" target="_blank" rel="noopener">github.com/KaitoA1008/ledgerlens <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></dd></div></dl>
+<figure class="case-cover"><img decoding="async" src="assets/ledgerlens-current.webp" alt="LedgerLens interface" loading="lazy"></figure>
+<section class="case-section"><p class="eyebrow">The problem</p><h3 class="case-h">What needed to work.</h3><p>An extracted value is not enough. Reviewers need its source, a way to correct it, and a reliable record of what was approved.</p></section>
+<section class="case-section"><p class="eyebrow">The workflow</p><h3 class="case-h">A deliberate path.</h3><ol class="case-steps"><li><h3>Extract</h3><p>Read PDF or image invoices by layout and keep where each value sits on the page.</p></li><li><h3>Verify</h3><p>Inspect field evidence and purchase-order discrepancies.</p></li><li><h3>Approve</h3><p>Create a versioned approval snapshot and export CSV or JSON.</p></li></ol></section>
+<section class="case-section"><p class="eyebrow">My contribution</p><h3 class="case-h">Under the interface.</h3><ul class="case-list"><li>Layout-aware extraction with page evidence for every field and line item.</li><li>Line-level purchase-order matching and discrepancy handling.</li><li>Manual corrections, reviewer-marked evidence and versioned approval snapshots.</li><li>A held-out benchmark, background jobs, live updates and CSV/JSON exports.</li></ul></section>
+<figure class="case-cover"><img decoding="async" src="assets/ledgerlens-review.webp" alt="LedgerLens detail" loading="lazy"></figure>
+<section class="case-section"><p class="eyebrow">Engineering decisions</p><div class="case-decisions"><div><h4>Evidence stays close</h4><p>The source document and review controls share a workspace.</p></div><div><h4>Approvals are snapshots</h4><p>Exports correspond to the approved version, rather than an untracked mutable view.</p></div></div></section>
+<aside class="case-note"><p class="eyebrow">Project context</p><p>Independent demonstration using synthetic invoices and purchase orders. On 48 synthetic invoices in eight layouts, the local parser reads 216/216 fields on development layouts and 159/216 on held-out layouts, with 97% of filled values correct; receipts and photos remain weak. Optional LLM extraction has not been benchmarked on real business documents. Screenshots are from the working local application.</p></aside><a class="case-next" href="projects/relaydesk.html" data-project="relaydesk"><span class="eyebrow">Next project</span><span>RelayDesk <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></template><template id="tpl-relaydesk"><p class="case-kicker"><span>AGENT WORKFLOWS</span><span>Independent demo · 2026</span></p>
+<h2 class="case-title">RelayDesk<span class="accent">.</span></h2><p class="case-tagline">Automation, with a handoff.</p><p class="case-intro">An independent portfolio demo exploring how an agent can prepare support decisions while a person retains control over sensitive actions.</p>
+<dl class="case-meta"><div><dt>Role</dt><dd>Product, full-stack &amp; agent workflow development</dd></div><div><dt>Built with</dt><dd>LangGraph · PostgreSQL · FastAPI · Next.js</dd></div><div><dt>Source</dt><dd><a class="case-repo" href="https://github.com/KaitoA1008/relaydesk" target="_blank" rel="noopener">github.com/KaitoA1008/relaydesk <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></dd></div></dl>
+<figure class="case-cover"><img decoding="async" src="assets/relaydesk-current.webp" alt="RelayDesk interface" loading="lazy"></figure>
+<section class="case-section"><p class="eyebrow">The problem</p><h3 class="case-h">What needed to work.</h3><p>Turn a support request into a traceable decision without letting an automated recommendation silently become a real-world action.</p></section>
+<section class="case-section"><p class="eyebrow">The workflow</p><h3 class="case-h">A deliberate path.</h3><ol class="case-steps"><li><h3>Retrieve</h3><p>Check order ownership, find versioned policy passages and run read tools.</p></li><li><h3>Review</h3><p>Prepare a grounded reply and pause before any change for human approval.</p></li><li><h3>Resolve</h3><p>Execute the approved sandbox action, record its receipt and resolution history.</p></li></ol></section>
+<section class="case-section"><p class="eyebrow">My contribution</p><h3 class="case-h">Under the interface.</h3><ul class="case-list"><li>LangGraph routing with conditional edges and PostgreSQL checkpoints.</li><li>Read and write tools with before/after previews and re-checked preconditions.</li><li>Hybrid retrieval with optional local embeddings and a semantic intent fallback.</li><li>A 90-case benchmark, human approval, receipts and case history.</li></ul></section>
+<figure class="case-cover"><img decoding="async" src="assets/relaydesk-receipt.webp" alt="RelayDesk detail" loading="lazy"></figure>
+<section class="case-section"><p class="eyebrow">Engineering decisions</p><div class="case-decisions"><div><h4>A deliberate approval boundary</h4><p>The agent pauses before the reviewer approves an action.</p></div><div><h4>Policy versions matter</h4><p>The case retains the policy context used to prepare the decision.</p></div></div></section>
+<aside class="case-note"><p class="eyebrow">Project context</p><p>Independent demonstration using synthetic support cases. On 90 hand-written cases, a local semantic fallback raises correct held-out outcomes from 18/30 to 25/30; 3 of 10 injection phrasings are still answered, but cannot run a tool without approval. Responses default to local templates; actions are sandboxed. No real refund, outbound email or customer-system integration is claimed.</p></aside><a class="case-next" href="projects/vingrade.html" data-project="vingrade"><span class="eyebrow">Next project</span><span>VinGrade <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></template><script src="background.js" defer></script><script src="stage.js" defer></script><script src="modal.js" defer></script></body></html>

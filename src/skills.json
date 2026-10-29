@@ -1,0 +1,170 @@
+[
+  {
+    "orbit": "inner",
+    "group": "AI",
+    "name": "Python",
+    "description": "LLM applications and data workflows.",
+    "slug": "python"
+  },
+  {
+    "orbit": "inner",
+    "group": "AI",
+    "name": "LangGraph",
+    "description": "Stateful agent workflows.",
+    "slug": "langgraph"
+  },
+  {
+    "orbit": "inner",
+    "group": "AI",
+    "name": "LangChain",
+    "description": "Retrieval pipelines and LLM integrations.",
+    "slug": "langchain"
+  },
+  {
+    "orbit": "inner",
+    "group": "AI",
+    "name": "PyTorch",
+    "description": "Deep learning models.",
+    "slug": "pytorch"
+  },
+  {
+    "orbit": "inner",
+    "group": "AI",
+    "name": "OpenAI",
+    "description": "LLM application integrations.",
+    "slug": "openai"
+  },
+  {
+    "orbit": "inner",
+    "group": "AI",
+    "name": "Gemini",
+    "description": "Multimodal and language model integrations.",
+    "slug": "googlegemini"
+  },
+  {
+    "orbit": "inner",
+    "group": "Backend",
+    "name": "FastAPI",
+    "description": "Python APIs and AI serving.",
+    "slug": "fastapi"
+  },
+  {
+    "orbit": "inner",
+    "group": "Frontend",
+    "name": "React",
+    "description": "Interactive web interfaces.",
+    "slug": "react"
+  },
+  {
+    "orbit": "outer",
+    "group": "AI",
+    "name": "scikit-learn",
+    "description": "Machine learning and evaluation.",
+    "slug": "scikitlearn"
+  },
+  {
+    "orbit": "outer",
+    "group": "Backend",
+    "name": "Java",
+    "description": "Java backend development.",
+    "slug": "openjdk"
+  },
+  {
+    "orbit": "outer",
+    "group": "Backend",
+    "name": "Spring Boot",
+    "description": "Modular backend services.",
+    "slug": "springboot"
+  },
+  {
+    "orbit": "outer",
+    "group": "Backend",
+    "name": "PostgreSQL",
+    "description": "Relational data and vector retrieval.",
+    "slug": "postgresql"
+  },
+  {
+    "orbit": "outer",
+    "group": "Backend",
+    "name": "Redis",
+    "description": "Caching and asynchronous job workflows.",
+    "slug": "redis"
+  },
+  {
+    "orbit": "outer",
+    "group": "Frontend",
+    "name": "TypeScript",
+    "description": "Typed web and application code.",
+    "slug": "typescript"
+  },
+  {
+    "orbit": "outer",
+    "group": "Frontend",
+    "name": "Next.js",
+    "description": "Web application development.",
+    "slug": "nextdotjs"
+  },
+  {
+    "orbit": "outer",
+    "group": "Frontend",
+    "name": "Expo",
+    "description": "Cross-platform mobile applications.",
+    "slug": "expo"
+  },
+  {
+    "orbit": "outer",
+    "group": "Frontend",
+    "name": "Vite",
+    "description": "Frontend development and builds.",
+    "slug": "vite"
+  },
+  {
+    "orbit": "outer",
+    "group": "Backend",
+    "name": "GraphQL",
+    "description": "Backend-for-frontend API layer.",
+    "slug": "graphql"
+  },
+  {
+    "orbit": "outer",
+    "group": "Infrastructure",
+    "name": "Docker",
+    "description": "Reproducible application environments.",
+    "slug": "docker"
+  },
+  {
+    "orbit": "outer",
+    "group": "Infrastructure",
+    "name": "Git",
+    "description": "Version control.",
+    "slug": "git"
+  },
+  {
+    "orbit": "outer",
+    "group": "Infrastructure",
+    "name": "GitHub Actions",
+    "description": "Continuous integration and deployment.",
+    "slug": "githubactions"
+  },
+  {
+    "orbit": "outer",
+    "group": "Infrastructure",
+    "name": "pytest",
+    "description": "Backend testing and regression checks.",
+    "slug": "pytest"
+  },
+  {
+    "orbit": "outer",
+    "group": "AI",
+    "name": "Langfuse",
+    "description": "LLM tracing and observability.",
+    "slug": "langfuse"
+  },
+  {
+    "orbit": "outer",
+    "group": "Infrastructure",
+    "name": "Vercel",
+    "description": "Web application deployment.",
+    "slug": "vercel"
+  }
+]
